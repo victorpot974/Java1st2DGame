@@ -9,15 +9,25 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
-	Thread gameThread;
+	Thread gameThread;  // This thread = the game clock
 	private Sprite heroSprite;
 	private Screen parentScreen;
 	private int tileSize;
 	public KeyInputHandler keyManager;
+	final private int framesPerSecond;
+	private int count;
+	
+	private Timer mainTimer;
+	private Timer secondTimer;
 
 	public GamePanel(Screen screen, Color bg) {
 		// TODO Auto-generated constructor stub
 		this.parentScreen = screen;
+		count = 0;
+		framesPerSecond = 60;
+		
+		mainTimer = new Timer(1 / framesPerSecond);
+		secondTimer = new Timer(1);
 		
 		this.setDoubleBuffered(true);
 		
@@ -50,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	
 	private void update() {
-		this.heroSprite.update();
+		this.heroSprite.update(this.keyManager);
 	}
 	
 	private void draw() {
@@ -64,10 +74,21 @@ public class GamePanel extends JPanel implements Runnable{
 		// System.out.println("OK");
 	}
 	
+	
 	public void run() {
 		while (gameThread != null) {
-			this.update();
-			this.draw();
+			
+			// System.out.println(currentTime);
+			
+			if (this.mainTimer.isReached()) {
+				count++;
+				//this.update();
+				//this.draw();
+			}
+			
+			if (this.secondTimer.isReached()) {
+				//System.out.println(count);
+			}
 		}
 	}
 

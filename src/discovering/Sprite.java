@@ -39,6 +39,11 @@ public class Sprite {
 		this.velocity.coord2.setY(newVal);
 	}
 	
+	public void setVelocity(double xVal, double yVal) {
+		this.velocity.setCoord(Coordinate.fromCartesian(xVal, yVal));
+	}
+	
+	
 	public void applyVelocity() {
 		this.pos.increaseX(this.velocity.coord2.getX());
 		this.pos.increaseY(this.velocity.coord2.getY());
@@ -48,9 +53,16 @@ public class Sprite {
 		this.velocity.add(this.acceleration);
 	}
 	
-	public void update() {
+	public void detectArrowControls(KeyInputHandler inputChannel) {
+		int xVel = inputChannel.leftPressed() ? -1 : inputChannel.rightPressed() ? 1 : 0;;
+		int yVel = inputChannel.upPressed() ? -1 : inputChannel.downPressed() ? 1 : 0;
+		this.setVelocity(xVel, yVel);
+	}
+	
+	public void update(KeyInputHandler inputChannel) {
 		// this.count++;
 		// System.out.println(this.count);
+		this.detectArrowControls(inputChannel);
 		this.applyAcceleration();
 		this.applyVelocity();
 	}
