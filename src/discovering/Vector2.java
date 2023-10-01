@@ -18,6 +18,14 @@ public class Vector2 {
 		return new Vector2(Coordinate.fromCartesian(xval, yval));
 	}
 	
+	public  double x() {
+		return this.coord2.getX();
+	}
+	
+	public double y() {
+		return this.coord2.getY();
+	}
+	
 	public void setCoord(Coordinate newCoord) {
 		this.coord2 = newCoord;
 	}

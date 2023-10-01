@@ -3,7 +3,7 @@ package discovering;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Sprite {
+public abstract class Sprite {
 	
 	private int width;
 	private int height;
@@ -31,6 +31,21 @@ public class Sprite {
 		return (int) this.pos.getY();
 	}
 	
+	public Vector2 getVelocity() {
+		return this.velocity;
+	}
+	
+	public double getVelocity(char coordinateInfo) {
+		if (coordinateInfo == 'x' || coordinateInfo == 'X') {
+			return this.getVelocity().x();
+		}
+		
+		else if (coordinateInfo == 'y' || coordinateInfo == 'Y') {
+			return this.getVelocity().y();
+		}
+		return 0;
+	}
+	
 	public void setXVelocity(double newVal) {
 		this.velocity.coord2.setX(newVal);
 	}
@@ -49,30 +64,35 @@ public class Sprite {
 		this.pos.increaseY(this.velocity.coord2.getY());
 	}
 	
+	public void applyVelocity(int xVal, int yVal) {
+		this.pos.increaseX(xVal);
+		this.pos.increaseY(yVal);
+	}
+	
+	public boolean isMoving() {
+		return ( this.velocity.x() != 0 || this.velocity.y() != 0 );
+	}
+	
 	public void applyAcceleration() {
 		this.velocity.add(this.acceleration);
 	}
 	
-	public void detectArrowControls(KeyInputHandler inputChannel) {
-		int xVel = inputChannel.leftPressed() ? -1 : inputChannel.rightPressed() ? 1 : 0;;
-		int yVel = inputChannel.upPressed() ? -1 : inputChannel.downPressed() ? 1 : 0;
-		this.setVelocity(xVel, yVel);
+	public void applyAcceleration(int xVal, int yVal) {
+		this.velocity.add(new Vector2(Coordinate.fromCartesian(xVal, yVal)));
 	}
 	
-	public void update(KeyInputHandler inputChannel) {
-		// this.count++;
-		// System.out.println(this.count);
-		this.detectArrowControls(inputChannel);
-		this.applyAcceleration();
-		this.applyVelocity();
+	public void setColor(Color newColor) {
+		this.color = newColor;
 	}
+	
+	public abstract void update();
+	public abstract void update(KeyInputHandler inputChannel);
+	public abstract String type();
 	
 	public void draw(Graphics2D g2) {
 		g2.setColor(this.color);
 		g2.fillRect(this.x(), this.y(), this.width, this.height);
-		g2.dispose();
-		//System.out.println(this.x());
-		// System.out.println(this.y());
+		//g2.dispose();
 	}
 	
 }

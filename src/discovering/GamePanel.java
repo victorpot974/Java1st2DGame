@@ -10,24 +10,27 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	Thread gameThread;  // This thread = the game clock
-	private Sprite heroSprite;
+	//private Player heroSprite;
 	private Screen parentScreen;
 	private int tileSize;
 	public KeyInputHandler keyManager;
 	final private int framesPerSecond;
-	private int count;
+	private double frameRate;
+	private Sprite[][] allSprites;
+	//private int count;
 	
 	private Timer mainTimer;
-	private Timer secondTimer;
+	// private Timer secondTimer;
 
-	public GamePanel(Screen screen, Color bg) {
+	public GamePanel(Screen screen, Color bg, Sprite[][] sprites) {
 		// TODO Auto-generated constructor stub
 		this.parentScreen = screen;
-		count = 0;
+		//count = 0;
 		framesPerSecond = 60;
-		
-		mainTimer = new Timer(1 / framesPerSecond);
-		secondTimer = new Timer(1);
+		frameRate  = (double) 1 / framesPerSecond;
+		mainTimer = new Timer(frameRate);
+		allSprites = sprites;
+		//secondTimer = new Timer(1);
 		
 		this.setDoubleBuffered(true);
 		
@@ -37,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable{
 		this.parentScreen.load();
 		
 		this.tileSize = this.parentScreen.getTileSize();
-		this.heroSprite = new Sprite(new Coordinate(0, 0), this.tileSize, this.tileSize);
+		//this.heroSprite = new Player(new Coordinate(0, 0), this.tileSize, this.tileSize);
 		
 		this.loadInputManager();
 		// this.heroSprite.setXVelocity(1);
@@ -60,8 +63,14 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	
 	private void update() {
-		this.heroSprite.update(this.keyManager);
-	}
+		for (Sprite[] sList: allSprites) {
+			for (Sprite s : sList) {
+				if (s != null) {
+					s.update(keyManager);
+					}
+				}
+			}
+		}
 	
 	private void draw() {
 		repaint();
@@ -70,8 +79,15 @@ public class GamePanel extends JPanel implements Runnable{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		this.heroSprite.draw(g2);
+		for (Sprite[] sList: allSprites) {
+			for (Sprite s : sList) {
+					if (s != null) {
+						s.draw(g2);
+					}
+			}
+		}
 		// System.out.println("OK");
+		g2.dispose();
 	}
 	
 	
@@ -81,14 +97,10 @@ public class GamePanel extends JPanel implements Runnable{
 			// System.out.println(currentTime);
 			
 			if (this.mainTimer.isReached()) {
-				count++;
-				//this.update();
-				//this.draw();
+				this.update();
+				this.draw();
 			}
-			
-			if (this.secondTimer.isReached()) {
-				//System.out.println(count);
-			}
+
 		}
 	}
 
