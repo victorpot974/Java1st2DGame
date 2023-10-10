@@ -32,10 +32,6 @@ public class KeyInputHandler implements KeyListener {
 		
 		dTyped = code == KeyEvent.VK_DOWN;
 		
-		if(lTyped) {
-			System.out.println("left");
-		}
-		
 	}
 
 	@Override
@@ -116,6 +112,10 @@ public class KeyInputHandler implements KeyListener {
 	
 	public boolean downPressed() {
 		return dPressed;
+	}
+	
+	public boolean allArrowsReleased() {
+		return !(dPressed || rPressed || uPressed|| lPressed);
 	}
 
 }

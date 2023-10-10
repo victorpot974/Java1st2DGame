@@ -85,6 +85,19 @@ public abstract class Sprite {
 		this.color = newColor;
 	}
 	
+	public void setPos(double x, double y) {
+		this.pos.setX(x);
+		this.pos.setY(y);
+	}
+	
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
+	}
+	
 	public abstract void update();
 	public abstract void update(KeyInputHandler inputChannel);
 	public abstract String type();

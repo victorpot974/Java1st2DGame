@@ -5,16 +5,22 @@ public class Map {
 	private int width;
 	private int height;
 	private String abstractMap;
+	private Sprite[][] spriteGroup;
+	private int tileSize;
+	private Player mazePlayer;
 
-	public Map(String mapFile, int w, int h) {
+	public Map(String mapFile, int w, int h, int tSize) {
 		// TODO Auto-generated constructor stub
 		width = w;
 		height = h;
+		tileSize = tSize;
 		abstractMap = FileManager.readFile(mapFile);
+		this.readMap();
 	}
 	
 	
-	public static Map generateDefaultMap(String mapName, int w, int h) {
+	
+	public static Map generateDefaultMap(String mapName, int w, int h, int tSize) {
 		String mapRepr = "";
 		
 		
@@ -27,15 +33,39 @@ public class Map {
 		
 		FileManager.createFile(mapName);
 		FileManager.writeFile(mapName, mapRepr);
-		return new Map(mapName, w, h);
+		return new Map(mapName, w, h, tSize);
 	}
 	
 	
-	public  Sprite[][] readMap(int tileSize) {
-
-		Sprite[][] spriteGroup = new Sprite[this.height][this.width];
+	public Sprite[][] getSprites(){
+		return this.spriteGroup;
+	}
+	
+	public Sprite getTileFromPos(int x, int y) {
+		return this.spriteGroup[(int) y / tileSize][(int) x / tileSize];
+	}
+	
+	public Sprite getTile(int row, int col) {
+		return this.spriteGroup[row][col];
+	}
+	
+	public int getTileRowIndex(int y) {
+		return (int) y / tileSize;
+	}
+	
+	
+	public int getTileColIndex(int x) {
+		return (int) x / tileSize;
+	}
+	
+	public Player getPlayer() {
+		return this.mazePlayer;
+	}
+	
+	
+	private void readMap() {
 		
-		
+		this.spriteGroup = new Sprite[this.height][this.width];
 		for (int i =0; i < this.height; i++) {
 			
 			
@@ -45,20 +75,20 @@ public class Map {
 				switch (mapElt) {
 				
 				case 'X':
-					spriteGroup[i][j] = new Block(Coordinate.fromCartesian(j * tileSize, i * tileSize), tileSize, tileSize);
+					this.spriteGroup[i][j] = new Block(Coordinate.fromCartesian(j * tileSize, i * tileSize), tileSize, tileSize);
 					break;
 				case 'P':
-					spriteGroup[i][j] = new Player(Coordinate.fromCartesian(j * tileSize, i * tileSize), tileSize, tileSize);
+					this.spriteGroup[i][j] = null;
+					this.mazePlayer = new Player(Coordinate.fromCartesian(j * tileSize, i * tileSize), tileSize, tileSize, this);
 					break;
 				case 'G':
-					spriteGroup[i][j] = new Goal(Coordinate.fromCartesian(j * tileSize, i * tileSize), tileSize, tileSize);
+					this.spriteGroup[i][j] = new Goal(Coordinate.fromCartesian(j * tileSize, i * tileSize), tileSize, tileSize);
 					break;
 				default:
-					spriteGroup[i][j] = null;
+					this.spriteGroup[i][j] = null;
 				} 
 			}
 			
 		}
-		return spriteGroup;
 	}
 }

@@ -17,12 +17,13 @@ public class GamePanel extends JPanel implements Runnable{
 	final private int framesPerSecond;
 	private double frameRate;
 	private Sprite[][] allSprites;
+	private Player player;
 	//private int count;
 	
 	private Timer mainTimer;
 	// private Timer secondTimer;
 
-	public GamePanel(Screen screen, Color bg, Sprite[][] sprites) {
+	public GamePanel(Screen screen, Color bg, Sprite[][] sprites, Player playerSprite) {
 		// TODO Auto-generated constructor stub
 		this.parentScreen = screen;
 		//count = 0;
@@ -43,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
 		//this.heroSprite = new Player(new Coordinate(0, 0), this.tileSize, this.tileSize);
 		
 		this.loadInputManager();
+		this.player = playerSprite;
 		// this.heroSprite.setXVelocity(1);
 	}
 	
@@ -67,10 +69,11 @@ public class GamePanel extends JPanel implements Runnable{
 			for (Sprite s : sList) {
 				if (s != null) {
 					s.update(keyManager);
-					}
 				}
 			}
 		}
+		this.player.update(keyManager);
+	}
 	
 	private void draw() {
 		repaint();
@@ -86,6 +89,7 @@ public class GamePanel extends JPanel implements Runnable{
 					}
 			}
 		}
+		this.player.draw(g2);
 		// System.out.println("OK");
 		g2.dispose();
 	}
